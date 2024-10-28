@@ -1,6 +1,7 @@
 package vn.iotstar.SpringBootThymeleaf.Services;
 
 import java.util.List;
+import java.util.Locale.Category;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,91 +18,84 @@ import vn.iotstar.SpringBootThymeleaf.Repository.CategoryRepository;
 
 //Khai báo Service
 @Service
-public class CategoryServiceImpl implements ICategoryService {
+public class CategoryServiceImpl  implements ICategoryService{
 	
 	@Autowired
 	CategoryRepository categoryRepository;
 	
-	//source -> Generate Constructor using Field, xóa super()
 	public CategoryServiceImpl(CategoryRepository categoryRepository) {
 		this.categoryRepository = categoryRepository;
 	}
-	
+
 	@Override
 	public <S extends CategoryEntity> S save(S entity) {
-		if(entity.getCategoryId() == null) {
-			return categoryRepository.save(entity);
-		} else {
-			Optional<CategoryEntity> opt = findById(entity.getCategoryId());
-			if(opt.isPresent()) {
-				if(StringUtils.isEmpty(entity.getName())) {
+		if(entity!=null) {
+			Optional<CategoryEntity> opt = findById(entity.getId());
+			if (opt.isPresent() ) {
+				if (StringUtils.isEmpty(entity.getName())) {
 					entity.setName(opt.get().getName());
 				} else {
-					//Lấy lại img cũ
+					//lấy lại images cũ
 					entity.setName(entity.getName());
 				}
 			}
 			return categoryRepository.save(entity);
+			
+		} else {
+			return categoryRepository.save(entity);
 		}
 	}
-	
+
 	@Override
 	public List<CategoryEntity> findAll() {
 		return categoryRepository.findAll();
 	}
 	
-	@Override
-	public Page<CategoryEntity> findAll(Pageable pageable) {
-		return categoryRepository.findAll(pageable);
-	}
 	
-	@Override
-	public List<CategoryEntity> findAll(Sort sort) {
-		return categoryRepository.findAll(sort);
-	}
-	
-	@Override
-	public List<CategoryEntity> findAllById(Iterable<Long> ids) {
-		return categoryRepository.findAllById(ids);
-	}
-	
-	@Override
-	public Optional<CategoryEntity> findById(Long id) {
-		return categoryRepository.findById(id);
-	}
 
 	@Override
 	public <S extends CategoryEntity> Optional<S> findOne(Example<S> example) {
 		return categoryRepository.findOne(example);
 	}
-	
+
+	@Override
+	public List<CategoryEntity> findAll(Sort sort) {
+		return categoryRepository.findAll(sort);
+	}
+
+	@Override
+	public Page<CategoryEntity> findAll(Pageable pageable) {
+		return categoryRepository.findAll(pageable);
+	}
+
+	@Override
+	public List<CategoryEntity> findAllById(Iterable<Integer> ids) {
+		return categoryRepository.findAllById(ids);
+	}
+
+	@Override
+	public Optional<CategoryEntity> findById(Integer id) {
+		return categoryRepository.findById(id);
+	}
+
 	@Override
 	public long count() {
 		return categoryRepository.count();
 	}
 
 	@Override
-	public void deleteById(Long id) {
+	public void deleteById(Integer id) {
 		categoryRepository.deleteById(id);
-	}
-	
-	@Override
-	public void delete(CategoryEntity entity) {
-		categoryRepository.delete(entity);
-	}
-	
-	@Override
-	public void deleteAll() {
-		categoryRepository.deleteAll();
 	}
 
 	@Override
 	public List<CategoryEntity> findByNameContaining(String name) {
 		return categoryRepository.findByNameContaining(name);
 	}
-	
+
 	@Override
 	public Page<CategoryEntity> findByNameContaining(String name, Pageable pageable) {
 		return categoryRepository.findByNameContaining(name, pageable);
 	}
+		
 }

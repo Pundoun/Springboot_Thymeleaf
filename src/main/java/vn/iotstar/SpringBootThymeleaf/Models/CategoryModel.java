@@ -1,18 +1,20 @@
-package vn.iotstar.SpringBootThymeleaf.Entity;
+package vn.iotstar.SpringBootThymeleaf.Models;
 
 import java.io.Serializable;
-import java.util.Set;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
-@Table(name="categories")
-public class CategoryEntity implements Serializable {
+public class CategoryModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -20,10 +22,12 @@ public class CategoryEntity implements Serializable {
 	@Column(name="categoryid")
 	private int id;
 	@Column(name="categoryname", columnDefinition = "nvarchar(255) not null")
+	@NotEmpty(message = "không được bỏ trống")
 	private String name;
 	@Column(name="images", columnDefinition = "nvarchar(500) null")
 	private String images;
 	@Column(name="status")
 	private int status;
 	
+	private Boolean isEdit = false;
 }

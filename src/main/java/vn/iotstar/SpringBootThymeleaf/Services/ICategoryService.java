@@ -12,30 +12,28 @@ import vn.iotstar.SpringBootThymeleaf.Entity.CategoryEntity;
 
 public interface ICategoryService {
 
-	void deleteById(Long id);
-
-	long count();
-
-	Optional<CategoryEntity> findById(Long id);
-
-	List<CategoryEntity> findAll();
+	Page<CategoryEntity> findByNameContaining(String name, Pageable pageable);
 
 	List<CategoryEntity> findByNameContaining(String name);
 
-	Page<CategoryEntity> findByNameContaining(String name, Pageable pageable);
+	void deleteById(Integer id);
 
-	void deleteAll();
+	long count();
 
-	void delete(CategoryEntity entity);
+	Optional<CategoryEntity> findById(Integer id);
 
-	<S extends CategoryEntity> Optional<S> findOne(Example<S> example);
-
-	List<CategoryEntity> findAllById(Iterable<Long> ids);
-
-	List<CategoryEntity> findAll(Sort sort);
+	List<CategoryEntity> findAllById(Iterable<Integer> ids);
 
 	Page<CategoryEntity> findAll(Pageable pageable);
 
+	List<CategoryEntity> findAll(Sort sort);
+
+	<S extends CategoryEntity> Optional<S> findOne(Example<S> example);
+
+	List<CategoryEntity> findAll();
+
 	<S extends CategoryEntity> S save(S entity);
 
+	
+	
 }

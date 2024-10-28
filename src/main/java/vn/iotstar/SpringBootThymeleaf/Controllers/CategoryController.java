@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ch.qos.logback.core.joran.util.beans.BeanUtil;
 import jakarta.validation.Valid;
 import vn.iotstar.SpringBootThymeleaf.Entity.CategoryEntity;
+import vn.iotstar.SpringBootThymeleaf.Models.CategoryModel;
 import vn.iotstar.SpringBootThymeleaf.Services.ICategoryService;
 
 
@@ -78,7 +79,7 @@ public class CategoryController {
 	}
 
 	@GetMapping("edit/{categoryId}")
-	public ModelAndView edit(ModelMap model, @PathVariable("categoryId") Long categoryId) {
+	public ModelAndView edit(ModelMap model, @PathVariable("categoryId") Integer categoryId) {
 	    Optional<CategoryEntity> optCategory = categoryService.findById(categoryId);
 	    CategoryModel cateModel = new CategoryModel();
 	    // kiểm tra sự tồn tại của category
@@ -97,62 +98,62 @@ public class CategoryController {
 
 	
 	
-	@GetMapping("delete/{categoryId}")
-	public ModelAndView delete(ModelMap model, @PathVariable("categoryId") Long categoryId) {
-	    categoryService.deleteById(categoryId);
-	    model.addAttribute("message", "Category is deleted!!!!");
-	    return new ModelAndView("forward:/admin/categories/searchpaginated", model);
-	}
-
-	@GetMapping("search")
-	public String search(ModelMap model, @RequestParam(name="name", required=false) String name) {
-	    List<CategoryEntity> list = null;
-
-	    // có nội dung truyền về không, name là tùy chọn khi required=false
-	    if (StringUtils.hasText(name)) {
-	        list = categoryService.findByNameContaining(name);
-	    } else {
-	        list = categoryService.findAll();
-	    }
-	    
-	    model.addAttribute("categories", list);
-	    return "admin/categories/search";
-	}
-
-	@RequestMapping("searchpaginated")
-	public String search(ModelMap model,
-	                     @RequestParam(name="name", required=false) String name,
-	                     @RequestParam("page") Optional<Integer> page,
-	                     @RequestParam("size") Optional<Integer> size) {
-	    int count = (int) categoryService.count();
-	    int currentPage = page.orElse(1);
-	    int pageSize = size.orElse(5);
-
-	    Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("name"));
-	    Page<CategoryEntity> resultPage = null;
-
-	    if (StringUtils.hasText(name)) {
-	        resultPage = categoryService.findByNameContaining(name, pageable);
-	        model.addAttribute("name", name);
-	    } else {
-	        resultPage = categoryService.findAll(pageable);
-	    }
-
-	    int totalPages = resultPage.getTotalPages();
-	    if (totalPages > 0) {
-	        int start = Math.max(1, currentPage - 2);
-	        int end = Math.min(currentPage + 2, totalPages);
-
-	        if (totalPages > count) {
-	            if (end == totalPages) start = end - count;
-	            else if (start == 1) end = start + count;
-	        }
-
-	        List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
-	        		.boxed().collect(Collectors.toList());
-	        model.addAttribute("pageNumbers", pageNumbers);
-	    } 	model.addAttribute("categoryPage", resultPage);
-	    return "admin/categories/searchpaginated";
-	}
+//	@GetMapping("delete/{categoryId}")
+//	public ModelAndView delete(ModelMap model, @PathVariable("categoryId") Long categoryId) {
+//	    categoryService.deleteById(categoryId);
+//	    model.addAttribute("message", "Category is deleted!!!!");
+//	    return new ModelAndView("forward:/admin/categories/searchpaginated", model);
+//	}
+//
+//	@GetMapping("search")
+//	public String search(ModelMap model, @RequestParam(name="name", required=false) String name) {
+//	    List<CategoryEntity> list = null;
+//
+//	    // có nội dung truyền về không, name là tùy chọn khi required=false
+//	    if (StringUtils.hasText(name)) {
+//	        list = categoryService.findByNameContaining(name);
+//	    } else {
+//	        list = categoryService.findAll();
+//	    }
+//	    
+//	    model.addAttribute("categories", list);
+//	    return "admin/categories/search";
+//	}
+//
+//	@RequestMapping("searchpaginated")
+//	public String search(ModelMap model,
+//	                     @RequestParam(name="name", required=false) String name,
+//	                     @RequestParam("page") Optional<Integer> page,
+//	                     @RequestParam("size") Optional<Integer> size) {
+//	    int count = (int) categoryService.count();
+//	    int currentPage = page.orElse(1);
+//	    int pageSize = size.orElse(5);
+//
+//	    Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("name"));
+//	    Page<CategoryEntity> resultPage = null;
+//
+//	    if (StringUtils.hasText(name)) {
+//	        resultPage = categoryService.findByNameContaining(name, pageable);
+//	        model.addAttribute("name", name);
+//	    } else {
+//	        resultPage = categoryService.findAll(pageable);
+//	    }
+//
+//	    int totalPages = resultPage.getTotalPages();
+//	    if (totalPages > 0) {
+//	        int start = Math.max(1, currentPage - 2);
+//	        int end = Math.min(currentPage + 2, totalPages);
+//
+//	        if (totalPages > count) {
+//	            if (end == totalPages) start = end - count;
+//	            else if (start == 1) end = start + count;
+//	        }
+//
+//	        List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
+//	        		.boxed().collect(Collectors.toList());
+//	        model.addAttribute("pageNumbers", pageNumbers);
+//	    } 	model.addAttribute("categoryPage", resultPage);
+//	    return "admin/categories/searchpaginated";
+//	}
 
 }
